@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PlayHub - Free Online Games</title>
-  <meta name="description" content="Play free trending HTML5 games like Subway Surfers, 2048, Tetris, Pac-Man directly in browser." />
+  <meta name="description" content="Play free trending HTML5 games like 2048, Tetris, Pac-Man directly in browser." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +24,10 @@
     }
     .poki-card:active {
       transform: scale(0.96);
+    }
+    .poki-card:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(255, 221, 87, 0.9);
     }
   </style>
 </head>
@@ -69,9 +73,16 @@
         <iframe 
           id="game-iframe" 
           class="w-full h-full border-0" 
-          allow="autoplay; gamepad; keyboard" 
+          allow="autoplay; fullscreen; gamepad" 
           allowfullscreen>
         </iframe>
+        <!-- Manual fallback: some game sites block iframe embedding outright, and a
+             blocked frame usually just stays blank with no JS-detectable error, so
+             this link is always available rather than trying to auto-detect failure. -->
+        <a id="fallback-link" href="#" target="_blank" rel="noopener noreferrer"
+           class="absolute bottom-3 right-3 z-10 bg-black/70 backdrop-blur-md text-white text-[11px] sm:text-xs font-semibold px-3 py-1.5 rounded-xl hover:bg-black/90 transition-colors">
+          Not loading? Open in new tab ↗
+        </a>
       </div>
     </div>
   </div>
@@ -88,17 +99,17 @@
       },
       { 
         id: "2", 
-        title: "Subway Surfers", 
+        title: "Neon Run", 
         big: true, 
-        img: "https://images.crazygames.com/subway-surfers/20230206103606/subway-surfers-cover?auto=format%2Ccompress&q=90&cs=strip&ch=DPR&fit=crop", 
-        url: "https://y8.com/embed/subway_surfers_ny" 
+        img: "https://gamezipper.com/og-images/neon-run.png", 
+        url: "https://gamezipper.com/neon-run/?utm_source=embed" 
       },
       { 
         id: "3", 
         title: "Playable Chess AI", 
         big: false, 
-        img: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=400&auto=format&fit=crop&q=80", 
-        url: "https://simplechess.org/" 
+        img: "https://www.simplechess.com/img/template/marketing_play_chess.png", 
+        url: "https://www.simplechess.com/play-vs-computer.html" 
       },
       { 
         id: "4", 
@@ -118,8 +129,8 @@
         id: "6", 
         title: "Tetris Classic", 
         big: true, 
-        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Tetris_Template.svg/512px-Tetris_Template.svg.png", 
-        url: "https://tetris.com/play-tetris" 
+        img: "https://gamezipper.com/og-images/tetris.png", 
+        url: "https://gamezipper.com/tetris/?utm_source=embed" 
       },
       { 
         id: "7", 
@@ -132,21 +143,21 @@
         id: "8", 
         title: "Chrome Dino", 
         big: false, 
-        img: "https://chromedino.com/assets/dino-icon.png", 
-        url: "https://chromedino.com/" 
+        img: "https://chromedino.com/img/og-image.png", 
+        url: "https://chromedino.com/embed/" 
       },
       { 
         id: "9", 
         title: "Tower Builder", 
         big: false, 
-        img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80", 
+        img: "https://iamkun.github.io/tower_game/assets/main-index-title.png", 
         url: "https://iamkun.github.io/tower_game/" 
       },
       { 
         id: "10", 
         title: "Wordle", 
         big: false, 
-        img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=80", 
+        img: "https://wordleunlimited.org/wordle_unlimited_1200_630.png", 
         url: "https://wordleunlimited.org/" 
       }
     ];
@@ -156,6 +167,15 @@
     GAMES_LIST.forEach(game => {
       const card = document.createElement("div");
       card.onclick = () => openGame(game.id);
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", `Play ${game.title}`);
+      card.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openGame(game.id);
+        }
+      };
       card.className = `poki-card ${game.big ? 'col-span-2 row-span-2' : ''} rounded-3xl overflow-hidden shadow-md shadow-teal-950/15 cursor-pointer relative border-2 border-white/80 bg-slate-900`;
       card.innerHTML = `
         <img src="${game.img}" alt="${game.title}" class="w-full h-full object-cover" />
@@ -171,6 +191,7 @@
       if (!game) return;
       document.getElementById("game-iframe").src = game.url;
       document.getElementById("player-game-title").innerText = game.title;
+      document.getElementById("fallback-link").href = game.url;
       document.getElementById("player-view").classList.remove("hidden");
     }
 
