@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PlayHub - Play Free Online Games</title>
+  <title>PlayHub - Free Online Games | Play Trending Games</title>
+  <meta name="description" content="Play free online games like Subway Surfers, 2048, Tetris, Pac-Man, and more on PlayHub." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,76 +34,25 @@
   <!-- Main View -->
   <main id="catalog-view" class="max-w-4xl mx-auto px-4 py-4 w-full space-y-4">
     
-    <!-- Poki Masonry Style Grid -->
-    <div class="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 gap-3 auto-rows-[80px] sm:auto-rows-[100px] md:auto-rows-[120px]">
+    <!-- Poki Masonry Grid -->
+    <div id="games-container" class="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 gap-3 auto-rows-[80px] sm:auto-rows-[100px] md:auto-rows-[120px]">
       
-      <!-- Brand Box -->
+      <!-- Logo Box -->
       <div class="bg-white rounded-3xl p-3 flex flex-col justify-between shadow-lg shadow-teal-900/10 border-2 border-white/60">
-        <div class="flex items-center gap-1 font-black text-2xl tracking-tighter text-blue-600">
-          <span>poki</span><span class="text-teal-500 text-xs">●</span>
+        <div class="flex items-center gap-1 font-black text-xl sm:text-2xl tracking-tighter text-blue-600">
+          <span>play</span><span class="text-teal-500 text-xs">●</span>
         </div>
         <div class="flex justify-between items-center text-slate-400">
-          <button class="p-1 hover:text-blue-600 transition-colors">👤</button>
-          <button class="p-1 hover:text-blue-600 transition-colors">🔍</button>
+          <button class="p-1 hover:text-blue-600">🎮</button>
+          <button class="p-1 hover:text-blue-600">🔥</button>
         </div>
       </div>
 
-      <!-- Featured Big 2x2 Game (2048) -->
-      <div onclick="openGame('1')" class="poki-card col-span-2 row-span-2 rounded-3xl overflow-hidden shadow-xl shadow-teal-950/20 cursor-pointer relative bg-amber-400 border-2 border-white/80">
-        <img src="https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=800&auto=format&fit=crop&q=80" alt="2048" class="w-full h-full object-cover" />
-        <div class="absolute bottom-2 left-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-xl text-white font-bold text-xs sm:text-sm">
-          2048 Classic
-        </div>
-      </div>
-
-      <!-- Normal Card: Hextris -->
-      <div onclick="openGame('2')" class="poki-card rounded-3xl overflow-hidden shadow-md shadow-teal-950/15 cursor-pointer relative bg-indigo-500 border-2 border-white/80">
-        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&auto=format&fit=crop&q=80" alt="Hextris" class="w-full h-full object-cover" />
-      </div>
-
-      <!-- Normal Card: Tower Building -->
-      <div onclick="openGame('3')" class="poki-card rounded-3xl overflow-hidden shadow-md shadow-teal-950/15 cursor-pointer relative bg-sky-400 border-2 border-white/80">
-        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80" alt="Tower" class="w-full h-full object-cover" />
-      </div>
-
-      <!-- Normal Card: Pacman -->
-      <div onclick="openGame('4')" class="poki-card rounded-3xl overflow-hidden shadow-md shadow-teal-950/15 cursor-pointer relative bg-yellow-400 border-2 border-white/80">
-        <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=400&auto=format&fit=crop&q=80" alt="Pacman" class="w-full h-full object-cover" />
-      </div>
-
-      <!-- Featured Big 2x2 Game (Tetris) -->
-      <div onclick="openGame('5')" class="poki-card col-span-2 row-span-2 rounded-3xl overflow-hidden shadow-xl shadow-teal-950/20 cursor-pointer relative bg-emerald-500 border-2 border-white/80">
-        <img src="https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=800&auto=format&fit=crop&q=80" alt="Tetris" class="w-full h-full object-cover" />
-        <div class="absolute bottom-2 left-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-xl text-white font-bold text-xs sm:text-sm">
-          Tetris Block
-        </div>
-      </div>
-
-      <!-- Normal Card: Flappy Bird -->
-      <div onclick="openGame('6')" class="poki-card rounded-3xl overflow-hidden shadow-md shadow-teal-950/15 cursor-pointer relative bg-rose-400 border-2 border-white/80">
-        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=80" alt="Flappy Bird" class="w-full h-full object-cover" />
-      </div>
-
-      <!-- Reward Coins Box -->
-      <div onclick="showRealAd()" class="poki-card rounded-3xl bg-amber-400 p-2 flex flex-col justify-center items-center text-center cursor-pointer border-2 border-white/80 shadow-md shadow-amber-900/20">
-        <span class="text-2xl animate-bounce">🎁</span>
-        <span class="font-bold text-[11px] text-amber-950 leading-tight">Free Coins</span>
-      </div>
-
-      <!-- Normal Card: Chrome Dino -->
-      <div onclick="openGame('7')" class="poki-card rounded-3xl overflow-hidden shadow-md shadow-teal-950/15 cursor-pointer relative bg-stone-300 border-2 border-white/80">
-        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400&auto=format&fit=crop&q=80" alt="Dino Runner" class="w-full h-full object-cover" />
-      </div>
-
-      <!-- Normal Card: Slither -->
-      <div onclick="openGame('8')" class="poki-card rounded-3xl overflow-hidden shadow-md shadow-teal-950/15 cursor-pointer relative bg-purple-500 border-2 border-white/80">
-        <img src="https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=400&auto=format&fit=crop&q=80" alt="Snake" class="w-full h-full object-cover" />
-      </div>
-
+      <!-- Games will be auto-generated here -->
     </div>
   </main>
 
-  <!-- Game Player Screen (Modal) -->
+  <!-- Game Player Screen -->
   <div id="player-view" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur flex flex-col items-center justify-center p-2 sm:p-4">
     <div class="w-full max-w-5xl h-full max-h-[95vh] bg-slate-900 rounded-3xl overflow-hidden flex flex-col border border-slate-700 shadow-2xl">
       <!-- Player Header -->
@@ -111,14 +61,9 @@
           ✕ Close
         </button>
         <span id="player-game-title" class="font-bold text-white text-base">Game</span>
-        <div class="flex items-center gap-2">
-          <button onclick="showRealAd()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-xl">
-            🎁 Watch Ad (+100)
-          </button>
-          <button onclick="toggleFullscreen()" class="bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs px-3 py-1.5 rounded-xl">
-            ⛶
-          </button>
-        </div>
+        <button onclick="toggleFullscreen()" class="bg-slate-700 hover:bg-slate-600 text-white font-semibold text-xs px-3 py-1.5 rounded-xl">
+          ⛶ Fullscreen
+        </button>
       </div>
 
       <!-- Iframe -->
@@ -129,21 +74,36 @@
   </div>
 
   <script>
-    const GAMES = {
-      "1": { title: "2048 Classic", url: "https://play2048.co/" },
-      "2": { title: "Hextris Arcade", url: "https://hextris.io/" },
-      "3": { title: "Tower Building", url: "https://iamkun.github.io/tower_game/" },
-      "4": { title: "Pacman Classic", url: "https://freepacman.org/" },
-      "5": { title: "Tetris Game", url: "https://tetris.com/play-tetris" },
-      "6": { title: "Flappy Bird", url: "https://flappybird.io/" },
-      "7": { title: "Dino Runner", url: "https://chromedino.com/" },
-      "8": { title: "Snake Classic", url: "https://playsnake.org/" }
-    };
+    const GAMES_LIST = [
+      { id: "1", title: "2048 Classic", big: true, img: "https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=600", url: "https://play2048.co/" },
+      { id: "2", title: "Hextris", big: false, img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400", url: "https://hextris.io/" },
+      { id: "3", title: "Tower Builder", big: false, img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400", url: "https://iamkun.github.io/tower_game/" },
+      { id: "4", title: "Pac-Man", big: false, img: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=400", url: "https://freepacman.org/" },
+      { id: "5", title: "Tetris Block", big: true, img: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=600", url: "https://tetris.com/play-tetris" },
+      { id: "6", title: "Flappy Bird", big: false, img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400", url: "https://flappybird.io/" },
+      { id: "7", title: "Dino T-Rex", big: false, img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400", url: "https://chromedino.com/" },
+      { id: "8", title: "Snake", big: false, img: "https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=400", url: "https://playsnake.org/" },
+      { id: "9", title: "Wordle", big: false, img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400", url: "https://wordleunlimited.org/" },
+      { id: "10", title: "Cookie Clicker", big: false, img: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400", url: "https://orteil.dashnet.org/cookieclicker/" },
+      { id: "11", title: "Subway Surf", big: true, img: "https://images.unsplash.com/photo-1563089145-599997674d42?w=600", url: "https://subwaysurfers.online/" },
+      { id: "12", title: "Chess Online", big: false, img: "https://images.unsplash.com/photo-1586165368502-1bad197a6461?w=400", url: "https://lichess.org/tv/frame?theme=brown&bg=dark" }
+    ];
 
-    let coins = parseInt(localStorage.getItem("coins") || "0");
+    const container = document.getElementById("games-container");
+
+    GAMES_LIST.forEach(game => {
+      const card = document.createElement("div");
+      card.onclick = () => openGame(game.id);
+      card.className = `poki-card ${game.big ? 'col-span-2 row-span-2' : ''} rounded-3xl overflow-hidden shadow-md shadow-teal-950/15 cursor-pointer relative border-2 border-white/80 bg-slate-800`;
+      card.innerHTML = `
+        <img src="${game.img}" alt="${game.title}" class="w-full h-full object-cover" />
+        ${game.big ? `<div class="absolute bottom-2 left-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-xl text-white font-bold text-xs sm:text-sm">${game.title}</div>` : ''}
+      `;
+      container.appendChild(card);
+    });
 
     function openGame(id) {
-      const game = GAMES[id];
+      const game = GAMES_LIST.find(g => g.id === id);
       if (!game) return;
       document.getElementById("game-iframe").src = game.url;
       document.getElementById("player-game-title").innerText = game.title;
@@ -162,12 +122,6 @@
       } else {
         iframe.requestFullscreen();
       }
-    }
-
-    function showRealAd() {
-      coins += 100;
-      localStorage.setItem("coins", coins.toString());
-      alert("🎉 +100 Coins received!");
     }
   </script>
 </body>
