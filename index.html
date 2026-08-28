@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PlayHub - Free Online Games</title>
-  <meta name="description" content="Play free trending HTML5 games like 2048, Tetris, Pac-Man directly in browser." />
+  <title>PlayHub - Free Online Games & Earn Rewards</title>
+  <meta name="description" content="Play free trending HTML5 games, earn coins by watching ads, and redeem rewards." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,16 +29,45 @@
       outline: none;
       box-shadow: 0 0 0 4px rgba(255, 221, 87, 0.9);
     }
+    /* Ad placeholder styling */
+    .ad-slot {
+      background: linear-gradient(135deg, #ffd166, #ff9f1c);
+      border: 2px dashed #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #333;
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col text-slate-900 selection:bg-indigo-500 selection:text-white pb-12">
 
-  <!-- Main View -->
+  <!-- Top Navigation with Coin Counter -->
+  <header class="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 py-2">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="font-black text-xl sm:text-2xl tracking-tighter text-blue-600">
+        <span>play</span><span class="text-teal-500 text-xs">●</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="bg-yellow-400 text-yellow-900 font-bold px-3 py-1 rounded-full text-sm">🏆 Coins: <span id="coin-counter">0</span></span>
+        <button onclick="openRewardAd()" class="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-xl text-sm transition">
+          🎁 Watch Ad for Coins
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Catalog View -->
   <main id="catalog-view" class="max-w-4xl mx-auto px-4 py-4 w-full space-y-4">
-    
-    <!-- Poki Masonry Grid -->
+    <!-- Ad Slot (Replace with actual ad code later) -->
+    <div id="ad-slot-top" class="ad-slot p-4 rounded-3xl text-center shadow-inner">
+      AD SLOT - 728x90 (replace with your ad code)
+    </div>
+
+    <!-- Games Grid -->
     <div id="games-container" class="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 gap-3 auto-rows-[80px] sm:auto-rows-[100px] md:auto-rows-[120px]">
-      
       <!-- Logo Box -->
       <div class="bg-white rounded-3xl p-3 flex flex-col justify-between shadow-lg shadow-teal-900/10 border-2 border-white/60">
         <div class="flex items-center gap-1 font-black text-xl sm:text-2xl tracking-tighter text-blue-600">
@@ -49,8 +78,12 @@
           <span>🎮</span>
         </div>
       </div>
+      <!-- Games loaded via JS -->
+    </div>
 
-      <!-- Games loaded via JavaScript -->
+    <!-- Another Ad Slot -->
+    <div id="ad-slot-bottom" class="ad-slot p-4 rounded-3xl text-center shadow-inner">
+      AD SLOT - 320x100 (replace with your ad code)
     </div>
   </main>
 
@@ -68,17 +101,17 @@
         </button>
       </div>
 
-      <!-- Working Game Iframe -->
+      <!-- Game Iframe with sandbox and referrerpolicy -->
       <div class="flex-1 w-full bg-black relative">
         <iframe 
           id="game-iframe" 
           class="w-full h-full border-0" 
+          sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups" 
+          referrerpolicy="no-referrer-when-downgrade"
           allow="autoplay; fullscreen; gamepad" 
           allowfullscreen>
         </iframe>
-        <!-- Manual fallback: some game sites block iframe embedding outright, and a
-             blocked frame usually just stays blank with no JS-detectable error, so
-             this link is always available rather than trying to auto-detect failure. -->
+        <!-- Fallback link -->
         <a id="fallback-link" href="#" target="_blank" rel="noopener noreferrer"
            class="absolute bottom-3 right-3 z-10 bg-black/70 backdrop-blur-md text-white text-[11px] sm:text-xs font-semibold px-3 py-1.5 rounded-xl hover:bg-black/90 transition-colors">
           Not loading? Open in new tab ↗
@@ -87,83 +120,48 @@
     </div>
   </div>
 
+  <!-- Reward Ad Modal (Simulated) -->
+  <div id="reward-modal" class="hidden fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl text-center">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Watch a short ad to earn 10 coins!</h2>
+      <div id="reward-ad-container" class="w-full h-40 bg-gray-200 rounded-2xl mb-4 flex items-center justify-center text-gray-500 font-semibold">
+        <!-- Replace with actual ad iframe or video -->
+        <span id="reward-ad-text">Loading ad...</span>
+      </div>
+      <p id="reward-countdown" class="text-lg font-semibold text-blue-600">Ad will finish in 15s</p>
+      <div class="mt-4 flex gap-3">
+        <button id="reward-close-btn" onclick="closeRewardModal()" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-xl transition">
+          Cancel
+        </button>
+        <button id="reward-claim-btn" onclick="claimReward()" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-xl transition opacity-50 pointer-events-none">
+          Claim Coins
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Exact matching photos + working playable links
+    // Game list (same as before)
     const GAMES_LIST = [
-      { 
-        id: "1", 
-        title: "2048 Classic", 
-        big: true, 
-        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/2048_logo.svg/512px-2048_logo.svg.png", 
-        url: "https://play2048.co/" 
-      },
-      { 
-        id: "2", 
-        title: "Neon Run", 
-        big: true, 
-        img: "https://gamezipper.com/og-images/neon-run.png", 
-        url: "https://gamezipper.com/neon-run/?utm_source=embed" 
-      },
-      { 
-        id: "3", 
-        title: "Playable Chess AI", 
-        big: false, 
-        img: "https://www.simplechess.com/img/template/marketing_play_chess.png", 
-        url: "https://www.simplechess.com/play-vs-computer.html" 
-      },
-      { 
-        id: "4", 
-        title: "Pacman", 
-        big: false, 
-        img: "https://upload.wikimedia.org/wikipedia/en/thumb/5/59/Pac-man.png/400px-Pac-man.png", 
-        url: "https://freepacman.org/" 
-      },
-      { 
-        id: "5", 
-        title: "Hextris", 
-        big: false, 
-        img: "https://hextris.io/images/icons/apple-touch-icon-180x180.png", 
-        url: "https://hextris.io/" 
-      },
-      { 
-        id: "6", 
-        title: "Tetris Classic", 
-        big: true, 
-        img: "https://gamezipper.com/og-images/tetris.png", 
-        url: "https://gamezipper.com/tetris/?utm_source=embed" 
-      },
-      { 
-        id: "7", 
-        title: "Flappy Bird", 
-        big: false, 
-        img: "https://upload.wikimedia.org/wikipedia/en/0/0a/Flappy_Bird_icon.png", 
-        url: "https://flappybird.io/" 
-      },
-      { 
-        id: "8", 
-        title: "Chrome Dino", 
-        big: false, 
-        img: "https://chromedino.com/img/og-image.png", 
-        url: "https://chromedino.com/embed/" 
-      },
-      { 
-        id: "9", 
-        title: "Tower Builder", 
-        big: false, 
-        img: "https://iamkun.github.io/tower_game/assets/main-index-title.png", 
-        url: "https://iamkun.github.io/tower_game/" 
-      },
-      { 
-        id: "10", 
-        title: "Wordle", 
-        big: false, 
-        img: "https://wordleunlimited.org/wordle_unlimited_1200_630.png", 
-        url: "https://wordleunlimited.org/" 
-      }
+      { id: "1", title: "2048 Classic", big: true, img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/2048_logo.svg/512px-2048_logo.svg.png", url: "https://play2048.co/" },
+      { id: "2", title: "Neon Run", big: true, img: "https://gamezipper.com/og-images/neon-run.png", url: "https://gamezipper.com/neon-run/?utm_source=embed" },
+      { id: "3", title: "Playable Chess AI", big: false, img: "https://www.simplechess.com/img/template/marketing_play_chess.png", url: "https://www.simplechess.com/play-vs-computer.html" },
+      { id: "4", title: "Pacman", big: false, img: "https://upload.wikimedia.org/wikipedia/en/thumb/5/59/Pac-man.png/400px-Pac-man.png", url: "https://freepacman.org/" },
+      { id: "5", title: "Hextris", big: false, img: "https://hextris.io/images/icons/apple-touch-icon-180x180.png", url: "https://hextris.io/" },
+      { id: "6", title: "Tetris Classic", big: true, img: "https://gamezipper.com/og-images/tetris.png", url: "https://gamezipper.com/tetris/?utm_source=embed" },
+      { id: "7", title: "Flappy Bird", big: false, img: "https://upload.wikimedia.org/wikipedia/en/0/0a/Flappy_Bird_icon.png", url: "https://flappybird.io/" },
+      { id: "8", title: "Chrome Dino", big: false, img: "https://chromedino.com/img/og-image.png", url: "https://chromedino.com/embed/" },
+      { id: "9", title: "Tower Builder", big: false, img: "https://iamkun.github.io/tower_game/assets/main-index-title.png", url: "https://iamkun.github.io/tower_game/" },
+      { id: "10", title: "Wordle", big: false, img: "https://wordleunlimited.org/wordle_unlimited_1200_630.png", url: "https://wordleunlimited.org/" }
     ];
 
-    const container = document.getElementById("games-container");
+    // Coin system
+    let coins = parseInt(localStorage.getItem('coins') || '0');
+    const coinDisplay = document.getElementById('coin-counter');
+    coinDisplay.innerText = coins;
 
+    // Build game grid
+    const container = document.getElementById("games-container");
     GAMES_LIST.forEach(game => {
       const card = document.createElement("div");
       card.onclick = () => openGame(game.id);
@@ -186,6 +184,7 @@
       container.appendChild(card);
     });
 
+    // Game player functions
     function openGame(id) {
       const game = GAMES_LIST.find(g => g.id === id);
       if (!game) return;
@@ -208,6 +207,55 @@
         iframe.requestFullscreen();
       }
     }
+
+    // Reward ad system
+    let rewardTimer;
+    let rewardTimeLeft = 15;
+    const rewardModal = document.getElementById('reward-modal');
+    const rewardCountdown = document.getElementById('reward-countdown');
+    const rewardClaimBtn = document.getElementById('reward-claim-btn');
+    const rewardAdText = document.getElementById('reward-ad-text');
+
+    function openRewardAd() {
+      rewardModal.classList.remove('hidden');
+      rewardTimeLeft = 15;
+      rewardCountdown.innerText = `Ad will finish in ${rewardTimeLeft}s`;
+      rewardAdText.innerText = "This is a simulated ad (use real ad network later). Please wait...";
+      rewardClaimBtn.classList.add('opacity-50', 'pointer-events-none');
+      rewardTimer = setInterval(() => {
+        rewardTimeLeft--;
+        rewardCountdown.innerText = `Ad will finish in ${rewardTimeLeft}s`;
+        if (rewardTimeLeft <= 0) {
+          clearInterval(rewardTimer);
+          rewardAdText.innerText = "Ad finished! You can claim your reward now.";
+          rewardClaimBtn.classList.remove('opacity-50', 'pointer-events-none');
+        }
+      }, 1000);
+    }
+
+    function closeRewardModal() {
+      clearInterval(rewardTimer);
+      rewardModal.classList.add('hidden');
+      resetRewardUI();
+    }
+
+    function claimReward() {
+      coins += 10;
+      localStorage.setItem('coins', coins.toString());
+      coinDisplay.innerText = coins;
+      closeRewardModal();
+    }
+
+    function resetRewardUI() {
+      rewardCountdown.innerText = "Ad will finish in 15s";
+      rewardClaimBtn.classList.add('opacity-50', 'pointer-events-none');
+      rewardAdText.innerText = "Loading ad...";
+    }
+
+    // Close reward modal on backdrop click
+    rewardModal.addEventListener('click', (e) => {
+      if (e.target === rewardModal) closeRewardModal();
+    });
   </script>
 </body>
 </html>
